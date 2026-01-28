@@ -482,3 +482,5 @@ $RECYCLE.BIN/
 *.swp
 API/appsettings.json
 API/reactsocialnet.db
+API/reactsocialnet.db-shm
+API/reactsocialnet.db-wal
