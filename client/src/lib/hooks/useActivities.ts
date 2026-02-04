@@ -1,8 +1,9 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import agent from "../api/agent";
 
 //react hooks by conventions need to have the word 'use' at the start
 export const useActivities = () => {
+  const queryClient = useQueryClient();
   const { data: activities, isPending } = useQuery({
     queryKey: ["activities"],
     queryFn: async () => {
@@ -10,8 +11,21 @@ export const useActivities = () => {
       return response.data;
     },
   });
+
+  const updateActivity = useMutation({
+    mutationFn: async (activity: Activity) => {
+      await agent.put("/activities", activity);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["activities"],
+      });
+    },
+  });
+
   return {
     activities,
     isPending,
+    updateActivity,
   };
 };
